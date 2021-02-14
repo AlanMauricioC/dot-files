@@ -57,3 +57,43 @@
 
 
 (setq org-agenda-files (list "~/org/work.org"))
+;; Some Go confing
+;;Load Go-specific language syntax
+;;For gocode use https://github.com/mdempsky/gocode
+
+
+(use-package! go-mode
+  :config
+  (add-hook 'before-save-hook #'gofmt-before-save)
+  (add-hook 'go-mode-hook 'flycheck-mode)
+  (add-hook 'go-mode-hook 'dumb-jump-mode)
+  (setq go-packages-function 'go-packages-go-list)
+  :bind
+  (:map go-mode-map ("M-." . godef-jump)))
+(use-package! go-stacktracer)
+(use-package! go-add-tags)
+(use-package! go-gopath)
+(use-package! go-direx)
+(use-package! gotest)
+(use-package! company-go
+  :config
+  (add-hook 'go-mode-hook 'company-mode)
+  (add-to-list 'company-backends 'company-go))
+
+(use-package! go-eldoc
+  :diminish eldoc-mode
+  :config (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+(require 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+(lsp-register-custom-settings
+ '(("gopls.completeUnimported" t t)
+   ("gopls.staticcheck" t t)))
+(add-to-list 'exec-path (expand-file-name "~/go/bin"))

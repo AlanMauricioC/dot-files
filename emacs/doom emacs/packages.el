@@ -49,3 +49,21 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! evil-tutor)
+
+;;Custom Compile Command
+;; Go packages
+(package! go-mode)
+
+(package! company-go)
+
+(package! go-eldoc)
+
+(package! go-stacktracer)
+
+(package! go-add-tags)
+
+(package! go-gopath)
+
+(package! go-direx)
+
+(package! gotest)
